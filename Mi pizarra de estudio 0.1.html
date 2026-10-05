@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mi pizarra de estudio</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f4ec;--paper:#fffefa;--ink:#2d2a26;--mu:#8b8374;--line:#e3dccb;--beige:#eadfc8;--r:#e5574f;--b:#3f7fd1;--g:#4aa66f;--y:#e8b93a;--p:#a06cd5;--glow:linear-gradient(transparent,transparent);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#3b2f28;--paper:#4d3f34;--ink:#fbefdc;--mu:#d3bfa3;--line:#6c5846;--beige:#614e3d;--glow:radial-gradient(ellipse 70% 55% at 88% -8%,rgba(255,196,110,.32),transparent 70%)}}
+:root[data-theme=dark]{--bg:#3b2f28;--paper:#4d3f34;--ink:#fbefdc;--mu:#d3bfa3;--line:#6c5846;--beige:#614e3d;--glow:radial-gradient(ellipse 70% 55% at 88% -8%,rgba(255,196,110,.32),transparent 70%)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.4 'Patrick Hand',ui-rounded,system-ui,sans-serif;background-image:var(--glow),radial-gradient(var(--line) 1.3px,transparent 1.3px);background-size:100% 100%,26px 26px;background-attachment:fixed,scroll}
+.wrap{max-width:1000px;margin:0 auto;padding:14px}
+header{display:flex;justify-content:space-between;align-items:center}
+h1{font:700 2.5rem/1 Caveat,cursive;margin:6px 0}
+h1 span{text-decoration:underline wavy var(--r);text-underline-offset:7px}
+h2{font:700 1.9rem Caveat,cursive;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+h3{font:700 1.45rem Caveat,cursive;margin:8px 0 4px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 2px}
+nav button{flex:none;border:0;border-radius:8px 8px 0 0;padding:6px 14px;font:inherit;color:var(--ink);cursor:pointer;background:color-mix(in srgb,var(--c) 22%,var(--paper));border-bottom:4px solid var(--c)}
+nav button.on{background:var(--c);color:#fff}
+.board{background:var(--paper);border:11px solid var(--beige);border-radius:14px;box-shadow:0 0 0 1px var(--line),0 10px 26px #0002;padding:18px;min-height:60vh}
+.tray{display:flex;gap:10px;justify-content:center;margin:0 auto;width:min(300px,80%);height:16px;background:var(--beige);border-radius:0 0 12px 12px;align-items:center}
+.tray i{width:34px;height:7px;border-radius:4px;background:var(--c)}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{border:2px dashed var(--line);border-radius:12px;padding:10px 14px}
+.it{display:flex;align-items:center;gap:8px;padding:6px 10px;margin:6px 0;border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border-radius:6px}
+.it small,.mu{color:var(--mu)}
+.it.dn span{text-decoration:line-through;opacity:.55}
+.tag{margin-left:auto;font-size:15px;padding:0 8px;border-radius:10px;background:var(--beige);white-space:nowrap}
+.tag.hot{background:var(--r);color:#fff}
+.x{margin-left:auto;border:0;background:none;color:var(--mu);font:inherit;font-size:22px;cursor:pointer}
+.tag+.x{margin-left:0}
+.big{font:700 5rem/1 Caveat,cursive;color:var(--r)}
+.fm{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+input,select{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 8px;font:inherit;min-width:0;max-width:100%}
+input[type=color]{width:46px;padding:2px}
+.b{border:2px solid var(--ink);background:var(--y);color:#2d2a26;border-radius:10px 14px 10px 14px;padding:6px 14px;font:inherit;cursor:pointer}
+.sc{overflow-x:auto}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.col{border:2px dashed var(--line);border-radius:10px;padding:4px 8px;min-height:120px}
+.col.now,.cd.now{border-color:var(--r);border-style:solid}
+.col h3{margin:2px 0}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dh{text-align:center;color:var(--mu)}
+.cd{min-height:70px;border:1.5px solid var(--line);border-radius:6px;padding:3px;overflow:hidden;font-size:14px}
+.m{display:block;color:#fff;background:var(--c);border-radius:4px;padding:0 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dr,.dot{border:0;background:none;font-size:26px;cursor:pointer;opacity:.25;padding:2px}
+.dr.on{opacity:1}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--g);opacity:1;margin-left:4px;padding:0}
+.dot.on{background:var(--g)}
+.hb{margin-left:auto;display:flex}
+.md{font-size:30px;border:0;background:none;cursor:pointer;opacity:.4}
+.md.on{opacity:1;transform:scale(1.2)}
+.bars{display:flex;gap:8px;align-items:flex-end;height:100px;margin-top:10px}
+.bars div{text-align:center;flex:1}
+.bars i{display:block;background:var(--b);border-radius:4px 4px 0 0}
+.st{padding:16px;color:#3a352c;font:700 1.6rem/1.1 Caveat,cursive;border-radius:3px;box-shadow:2px 4px 10px #0003;transform:rotate(var(--rot,0deg));position:relative;min-height:90px}
+.st .x{position:absolute;top:0;right:4px;color:#3a352c}
+.pm{text-align:center;padding:10px}
+.pm .big{font-size:7rem}
+@media(max-width:560px){.board{padding:12px;border-width:8px}}
+.fm input,.fm select{flex:1 1 130px}
+.fm input[type=color]{flex:0 0 46px}
+nav button span{margin-right:6px}
+@media(min-width:900px){.wrap{max-width:1200px;display:grid;grid-template-columns:185px 1fr;column-gap:20px;align-items:start}header{grid-column:1/-1}nav{flex-direction:column;position:sticky;top:12px}nav button{text-align:left;border-radius:10px;border-bottom:0;border-left:6px solid var(--c)}.tray{grid-column:2}}
+@media(max-width:700px){body{font-size:17px}.wrap{padding:10px 10px 96px}h1{font-size:2rem}.tray{display:none}nav{position:fixed;left:0;right:0;bottom:0;z-index:20;gap:2px;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:3px solid var(--beige);box-shadow:0 -6px 16px #0003}nav button{display:flex;flex-direction:column;align-items:center;font-size:12px;line-height:1.1;padding:5px 9px;border-radius:10px;border-bottom:0;background:none}nav button span{margin:0 0 2px;font-size:21px}nav button.on{background:color-mix(in srgb,var(--c) 30%,var(--paper));color:var(--ink)}.cd{min-height:54px;font-size:12px}.m{font-size:11px}.big{font-size:4rem}}
+</style></head>
+<body><div class="wrap">
+<header><h1>Mi <span>pizarra</span> de estudio ✎</h1><button class="x" data-th title="Modo claro/oscuro">◐</button></header>
+<nav id="n"></nav>
+<main class="board" id="v"></main>
+<div class="tray"><i style="--c:var(--r)"></i><i style="--c:var(--b)"></i><i style="--c:var(--g)"></i><i style="--c:var(--p)"></i></div>
+</div>
+<datalist id="dl"></datalist>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9);
+const iso=d=>d.toLocaleDateString('sv'),esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DN=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],KEY='pizarra-v1';
+const add=n=>{const d=new Date();d.setDate(d.getDate()+n);return iso(d)};
+let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S){const a=uid(),b=uid();S={subjects:[{id:a,name:'Matemáticas',color:'#e5574f',prof:'Profe de ejemplo',room:'A-101'},{id:b,name:'Literatura',color:'#3f7fd1',prof:'',room:'B-12'}],classes:[{id:uid(),sid:a,day:0,start:'09:00',end:'10:30'},{id:uid(),sid:b,day:2,start:'11:00',end:'12:30'}],acts:[{id:uid(),name:'Inglés',day:1,start:'17:00',end:'18:00'}],exams:[{id:uid(),sid:a,title:'Parcial 1',date:add(9)}],tasks:[{id:uid(),sid:b,title:'Ensayo de lectura',due:add(2),type:'Trabajo',done:false}],grades:[],habits:[{id:uid(),name:'Leer 15 min',days:{}}],water:{},sleep:{},mood:{},quotes:['Un paso a la vez ✿','Hecho es mejor que perfecto','Tú puedes con esto'],theme:''}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+if(S.theme)document.documentElement.dataset.theme=S.theme;
+const T=()=>iso(new Date()),dd=d=>Math.round((new Date(d+'T00:00')-new Date(T()+'T00:00'))/864e5);
+const sub=id=>S.subjects.find(s=>s.id==id)||{name:'General',color:'#9a9184',prof:'',room:''};
+const so=()=>S.subjects.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');
+const sf=()=>fld('sname','Materia (escribe el nombre)','text','data-r list="dl"');const dso=DN.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
+const fld=(n,p,t='text',x='')=>`<input name="${n}" type="${t}" placeholder="${p}" title="${p}" ${x}>`;
+const sel=(n,o)=>`<select name="${n}">${o}</select>`;
+const fm=(k,i,b='+ añadir')=>`<div class="fm">${i}<button class="b" data-add="${k}">${b}</button></div>`;
+const cdn=n=>n<0?`hace ${-n} d`:n==0?'¡hoy!':n==1?'mañana':`en ${n} días`;
+const drops=()=>{const w=S.water[T()]||0;return Array.from({length:8},(_,i)=>`<button class="dr ${i<w?'on':''}" data-w="${i+1}">💧</button>`).join('')};
+const moods=()=>['😫','😕','😐','🙂','🤩'].map((e,i)=>`<button class="md ${S.mood[T()]===i?'on':''}" data-m="${i}">${e}</button>`).join('');
+let view='hoy',cm=new Date();cm.setDate(1);
+const P={m:'f',l:1500,r:false,n:0,id:null};
+const pd=()=>{const c=$('#clk');if(!c)return;c.textContent=String(Math.floor(P.l/60)).padStart(2,'0')+':'+String(P.l%60).padStart(2,'0');$('#pml').textContent=P.m=='f'?'Foco ✎':'Descanso ☕';$('#pn').textContent=P.n};
+const V={
+hoy(){const t=T(),di=(new Date().getDay()+6)%7;
+const it=[...S.classes.filter(c=>c.day==di).map(c=>({s:c.start,e:c.end,n:sub(c.sid).name,c:sub(c.sid).color,r:sub(c.sid).room})),...S.acts.filter(a=>a.day==di).map(a=>({s:a.start,e:a.end,n:a.name+' ✦',c:'#a89a7e',r:'después de clase'}))].sort((a,b)=>a.s>b.s?1:-1);
+const al=[...S.tasks.filter(x=>!x.done&&x.due&&dd(x.due)<=3).map(x=>({d:dd(x.due),h:`${x.type}: ${esc(x.title)}`,c:sub(x.sid).color})),...S.exams.filter(x=>dd(x.date)>=0&&dd(x.date)<=7).map(x=>({d:dd(x.date),h:`Examen: ${esc(x.title)}`,c:sub(x.sid).color}))].sort((a,b)=>a.d-b.d);
+const nx=S.exams.filter(x=>dd(x.date)>=0).sort((a,b)=>a.date>b.date?1:-1)[0];
+const q=S.quotes.length?S.quotes[Math.floor(Date.now()/864e5)%S.quotes.length]:'';
+return `<h2>${new Date().toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'})}</h2><div class="g">
+<div class="card"><h3>Mi día</h3>${it.map(i=>`<div class="it" style="--c:${i.c}"><b>${i.s}–${i.e}</b> ${esc(i.n)} <small>${esc(i.r||'')}</small></div>`).join('')||'<p class="mu">Día libre ☼</p>'}</div>
+<div class="card"><h3>Ojo con esto</h3>${al.map(a=>`<div class="it" style="--c:${a.c}">${a.h}<span class="tag ${a.d<=1?'hot':''}">${a.d<0?'vencida':cdn(a.d)}</span></div>`).join('')||'<p class="mu">Todo bajo control ✓</p>'}</div>
+<div class="card"><h3>Próximo examen</h3>${nx?`<div class="big">${dd(nx.date)}</div><p>días para ${esc(nx.title)} (${esc(sub(nx.sid).name)})</p>`:'<p class="mu">Sin exámenes a la vista</p>'}</div>
+<div class="card"><h3>Agua</h3>${drops()}<h3>Ánimo</h3>${moods()}</div></div>
+${q?`<div class="st" style="background:#fff1a8;--rot:-1.5deg;margin-top:16px">${esc(q)}</div>`:''}`},
+semana(){const di=(new Date().getDay()+6)%7;
+return `<h2>Semana</h2><div class="sc"><div class="wk">${DN.map((d,i)=>{const l=[...S.classes.filter(c=>c.day==i).map(c=>({...c,n:sub(c.sid).name,c:sub(c.sid).color,k:'classes'})),...S.acts.filter(a=>a.day==i).map(a=>({...a,n:a.name+' ✦',c:'#a89a7e',k:'acts'}))].sort((a,b)=>a.start>b.start?1:-1);
+return `<div class="col ${i==di?'now':''}"><h3>${d}</h3>${l.map(x=>`<div class="it" style="--c:${x.c}"><div><b>${x.start}</b>–${x.end}<br>${esc(x.n)}</div><button class="x" data-del="${x.k}:${x.id}">×</button></div>`).join('')}</div>`}).join('')}</div></div>
+<div class="g"><div class="card"><h3>Nueva clase</h3>${fm('classes',sf()+sel('day',dso)+fld('start','Inicio','time','value="08:00"')+fld('end','Fin','time','value="09:00"'),'+ clase')}</div>
+<div class="card"><h3>Actividad post clase ✦</h3>${fm('acts',fld('name','Gym, idioma, club…','text','data-r')+sel('day',dso)+fld('start','Inicio','time','value="17:00"')+fld('end','Fin','time','value="18:00"'))}</div></div>`},
+mes(){const y=cm.getFullYear(),m=cm.getMonth(),f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),t=T();
+let c=DN.map(d=>`<div class="dh">${d}</div>`).join('')+'<div></div>'.repeat(f);
+for(let d=1;d<=n;d++){const k=iso(new Date(y,m,d));
+const ev=[...S.exams.filter(x=>x.date==k).map(x=>`<span class="m" style="--c:${sub(x.sid).color}">★ ${esc(x.title)}</span>`),...S.tasks.filter(x=>x.due==k).map(x=>`<span class="m" style="--c:${sub(x.sid).color}">• ${esc(x.title)}</span>`)].join('');
+c+=`<div class="cd ${k==t?'now':''}"><b>${d}</b>${ev}</div>`}
+return `<h2><button class="x" data-nav="-1">‹</button>${cm.toLocaleDateString('es',{month:'long',year:'numeric'})}<button class="x" data-nav="1">›</button></h2><div class="cal">${c}</div><p class="mu">★ examen · • entrega</p>`},
+examenes(){return `<h2>Exámenes</h2>${[...S.exams].sort((a,b)=>a.date>b.date?1:-1).map(x=>{const n=dd(x.date);return `<div class="it" style="--c:${sub(x.sid).color}"><b>${esc(x.title)}</b> <small>${esc(sub(x.sid).name)} · ${x.date}</small><span class="tag ${n>=0&&n<=3?'hot':''}">${n<0?'ya pasó':cdn(n)}</span><button class="x" data-del="exams:${x.id}">×</button></div>`}).join('')||'<p class="mu">Añade tu primer examen abajo.</p>'}${fm('exams',sf()+fld('title','Examen…','text','data-r')+fld('date','Fecha','date','data-r'))}`},
+tareas(){const L=[...S.tasks].sort((a,b)=>a.done-b.done||((a.due||'z')>(b.due||'z')?1:-1));
+return `<h2>Tareas y entregas</h2>${L.map(x=>{const n=x.due?dd(x.due):99;return `<div class="it ${x.done?'dn':''}" style="--c:${sub(x.sid).color}"><input type="checkbox" data-tog="${x.id}" ${x.done?'checked':''}><span>${esc(x.title)} <small>${esc(sub(x.sid).name)} · ${x.type}</small></span><span class="tag ${!x.done&&n<=1?'hot':''}">${x.due?(n<0?'vencida':cdn(n)):'sin fecha'}</span><button class="x" data-del="tasks:${x.id}">×</button></div>`}).join('')||'<p class="mu">Sin pendientes ✓</p>'}${fm('tasks',sf()+fld('title','Tarea o proyecto…','text','data-r')+sel('type','<option>Tarea</option><option>Proyecto</option><option>Trabajo</option><option>Lectura</option>')+fld('due','Entrega','date'))}`},
+notas(){const avg=g=>{const w=g.reduce((s,x)=>s+x.weight,0);return w?g.reduce((s,x)=>s+x.score*x.weight,0)/w:null},av=[];
+const h=S.subjects.map(s=>{const g=S.grades.filter(x=>x.sid==s.id),a=avg(g);if(a!=null)av.push(a);return `<div class="card"><h3 style="color:${s.color}">${esc(s.name)}</h3>${g.map(x=>`<div class="it" style="--c:${s.color}">${esc(x.name)}: <b>${x.score}</b> <small>(peso ${x.weight}%)</small><button class="x" data-del="grades:${x.id}">×</button></div>`).join('')}<p><b>Promedio: ${a==null?'—':a.toFixed(2)}</b></p></div>`}).join('');
+return `<h2>Notas · promedio general ${av.length?(av.reduce((a,b)=>a+b)/av.length).toFixed(2):'—'}</h2><div class="g">${h}</div>${fm('grades',sf()+fld('name','Examen, trabajo…','text','data-r')+fld('score','Nota','number','data-r step="any"')+fld('weight','Peso %','number','data-r value="100"'))}`},
+bienestar(){const t=T(),last=[...Array(7)].map((_,i)=>add(i-6));
+return `<h2>Bienestar</h2><div class="g"><div class="card"><h3>Agua · ${S.water[t]||0}/8</h3>${drops()}</div>
+<div class="card"><h3>Sueño de anoche</h3><div class="fm"><input id="sl" type="number" step="0.5" placeholder="Horas" value="${S.sleep[t]||''}"><button class="b" data-sleep>guardar</button></div><div class="bars">${last.map(d=>`<div><i style="height:${(S.sleep[d]||0)*9}px"></i><small>${d.slice(8)}</small></div>`).join('')}</div></div>
+<div class="card"><h3>Ánimo de hoy</h3>${moods()}</div>
+<div class="card" style="grid-column:1/-1"><h3>Hábitos y metas (últimos 7 días)</h3>${S.habits.map(h=>`<div class="it" style="--c:var(--g)">${esc(h.name)}<span class="hb">${last.map(d=>`<button class="dot ${h.days[d]?'on':''}" data-hb="${h.id}:${d}" title="${d}"></button>`).join('')}</span><button class="x" data-del="habits:${h.id}">×</button></div>`).join('')}${fm('habits',fld('name','Nuevo hábito o meta…','text','data-r'))}</div></div>`},
+pomodoro(){return `<h2>Pomodoro</h2><div class="pm"><div class="big" id="clk"></div><p id="pml"></p><button class="b" data-p="go">▶ / ❚❚</button> <button class="b" data-p="rs">reiniciar</button> <button class="b" data-p="sw">foco / descanso</button><p class="mu">Ciclos de foco completados: <span id="pn"></span></p></div>`},
+moodboard(){const cs=['#fff1a8','#ffd6d6','#d4ecd2','#d6e6ff','#ead9ff'];return `<h2>Moodboard</h2><div class="g">${S.quotes.map((q,i)=>`<div class="st" style="background:${cs[i%5]};--rot:${(i%3-1)*2.2}deg">${esc(q)}<button class="x" data-del="quotes:${i}">×</button></div>`).join('')}</div>${fm('quotes',fld('text','Frase, meta, recordatorio…','text','data-r style="flex:1"'),'+ nota')}`},
+materias(){return `<h2>Materias, profes y salones</h2>${S.subjects.map(s=>`<div class="it" style="--c:${s.color}"><b>${esc(s.name)}</b> <small>${esc(s.prof||'sin profe')} · salón ${esc(s.room||'—')}</small><button class="x" data-del="subjects:${s.id}">×</button></div>`).join('')}${fm('subjects',fld('name','Materia','text','data-r')+fld('prof','Profesor/a')+fld('room','Salón')+fld('color','Color','color','value="#c9a27a"'),'+ materia')}`}
+};
+const tabs=[['hoy','Hoy','r','🏠'],['semana','Semana','b','📅'],['mes','Calendario','g','🗓️'],['examenes','Exámenes','p','⏳'],['tareas','Tareas','y','✅'],['notas','Notas','r','📊'],['bienestar','Bienestar','g','🌿'],['pomodoro','Pomodoro','b','🍅'],['moodboard','Moodboard','p','📌'],['materias','Materias','y','📚']];
+$('#n').innerHTML=tabs.map(t=>`<button data-v="${t[0]}" style="--c:var(--${t[2]})"><span>${t[3]}</span>${t[1]}</button>`).join('');
+const R=()=>{$('#v').innerHTML=V[view]();$('#dl').innerHTML=S.subjects.map(x=>`<option value="${esc(x.name)}">`).join('');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==view));if(view=='pomodoro')pd()};
+document.addEventListener('click',ev=>{const t=ev.target.closest('button,input[type=checkbox]');if(!t)return;const d=t.dataset;let ch=1;
+if(d.v){view=d.v;ch=0}
+else if(d.add){const ins=[...t.parentElement.querySelectorAll('input,select')];if(ins.some(i=>i.hasAttribute('data-r')&&!i.value.trim()))return;const o={};ins.forEach(i=>o[i.name]=i.type=='number'?+i.value:i.value);
+ if(o.sname!==undefined){const nm=o.sname.trim().toLowerCase();let sj=S.subjects.find(x=>x.name.trim().toLowerCase()==nm);if(!sj){sj={id:uid(),name:o.sname.trim(),color:['#e5574f','#3f7fd1','#4aa66f','#e8b93a','#a06cd5','#e58a4f','#3fb5b0','#d65f9a'][S.subjects.length%8],prof:'',room:''};S.subjects.push(sj)}o.sid=sj.id;delete o.sname}
+ if(d.add=='quotes')S.quotes.push(o.text);else{o.id=uid();if(d.add=='tasks')o.done=false;if(d.add=='habits')o.days={};S[d.add].push(o)}}
+else if(d.del){const[k,id]=d.del.split(':');if(k=='quotes')S.quotes.splice(+id,1);else S[k]=S[k].filter(x=>x.id!=id)}
+else if(d.tog){const x=S.tasks.find(x=>x.id==d.tog);x.done=!x.done}
+else if(d.w){const n=+d.w;S.water[T()]=S.water[T()]==n?n-1:n}
+else if(d.m!==undefined)S.mood[T()]=+d.m
+else if(d.hb){const[i,k]=d.hb.split(':'),h=S.habits.find(x=>x.id==i);h.days[k]=!h.days[k]}
+else if(d.sleep!==undefined)S.sleep[T()]=+$('#sl').value||0
+else if(d.nav)cm.setMonth(cm.getMonth()+ +d.nav)
+else if(d.th!==undefined){const dk=document.documentElement.dataset.theme=='dark'||(!S.theme&&matchMedia('(prefers-color-scheme:dark)').matches);S.theme=dk?'light':'dark';document.documentElement.dataset.theme=S.theme}
+else if(d.p){if(d.p=='go'){P.r=!P.r;clearInterval(P.id);if(P.r)P.id=setInterval(()=>{P.l--;if(P.l<=0){if(P.m=='f')P.n++;P.m=P.m=='f'?'b':'f';P.l=P.m=='f'?1500:300}pd()},1000)}else if(d.p=='rs')P.l=P.m=='f'?1500:300;else{P.m=P.m=='f'?'b':'f';P.l=P.m=='f'?1500:300}pd();return}
+else return;
+if(ch)save();R()});
+R();
+})();
+</script></body></html>
